@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Search from '../components/Search.tsx';
+---
+
+<BaseLayout
+  title="Search"
+  description="Full-text, typo-tolerant, faceted search across the Avernus Archives."
+>
+  <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Search' }]} />
+  <header class="search-header">
+    <p class="eyebrow">Find anything</p>
+    <h1>Search the archive</h1>
+    <p class="muted">
+      Full-text and typo-tolerant. Filter by entity type, domain, edition, or
+      source. Results come from the built static index — no server required.
+    </p>
+  </header>
+
+  {/* client:only — the search engine runtime exists only in the browser. */}
+  <Search client:only="react">
+    <p slot="fallback" class="muted">Loading search…</p>
+  </Search>
+</BaseLayout>
+
+<style>
+  .search-header {
+    margin-bottom: var(--space-5);
+    max-width: 60ch;
+  }
+</style>

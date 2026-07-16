@@ -1,0 +1,17 @@
+---
+import { render } from 'astro:content';
+import EntityLayout from '../../layouts/EntityLayout.astro';
+import { buildEntityPaths, buildJsonLd } from '../../lib/entityPages';
+
+export async function getStaticPaths() {
+  return buildEntityPaths('sources');
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const jsonLd = buildJsonLd('sources', entry, Astro.site);
+---
+
+<EntityLayout collection="sources" entry={entry} jsonLd={jsonLd}>
+  <Content />
+</EntityLayout>

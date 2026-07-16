@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { BROWSABLE_COLLECTIONS } from '../lib/entities';
+import { getCollection } from 'astro:content';
+
+// Simple counts for the collection cards.
+const counts: Record<string, number> = {};
+for (const c of BROWSABLE_COLLECTIONS) {
+  counts[c.key] = (await getCollection(c.key as any)).length;
+}
+---
+
+<BaseLayout title="The Avernus Archives">
+  <section class="hero">
+    <p class="eyebrow">A structured archive for the Land of the Mists</p>
+    <h1>The Avernus Archives</h1>
+    <p class="hero-lede">
+      A fast, cross-referenced reference for the Ravenloft campaign setting —
+      its Domains of Dread, their cursed Darklords, and the characters and
+      places caught within the Mists. Every entry is typed, cited, and linked to
+      the others, so you can follow the web of connections instead of reading
+      flat prose.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="/search">Search the archive</a>
+      <a class="btn" href="/domains/barovia">Start with Barovia</a>
+    </div>
+  </section>
+
+  <section class="home-collections" aria-labelledby="browse-heading">
+    <h2 id="browse-heading">Browse by type</h2>
+    <div class="grid">
+      {
+        BROWSABLE_COLLECTIONS.map((c) => (
+          <a class="card home-card" href={c.urlBase}>
+            <span class="card-kicker">
+              {counts[c.key]} {counts[c.key] === 1 ? 'entry' : 'entries'}
+            </span>
+            <span class="card-title">{c.plural}</span>
+            <span class="card-summary">{c.blurb}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="home-note prose">
+    <h2>Built for accuracy over volume</h2>
+    <p>
+      This archive begins as a complete vertical slice — Barovia, Strahd von
+      Zarovich, and the people and places bound to them — held to the quality
+      bar every future entry must meet. Content is written in contributors' own
+      words and cited to a published source; the archive never reproduces
+      verbatim publisher text.
+    </p>
+    <p>
+      Facts that differ across editions carry inline edition tags, and material
+      that spoils a published adventure sits behind a click-to-reveal control so
+      players and DMs can share a page safely.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    max-width: 52ch;
+    padding-block: var(--space-6) var(--space-7);
+  }
+  .hero h1 {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-4);
+  }
+  .hero-lede {
+    font-size: var(--step-1);
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+  .home-collections {
+    margin-block: var(--space-6);
+  }
+  .home-collections h2,
+  .home-note h2 {
+    margin-bottom: var(--space-4);
+  }
+  .home-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .home-note {
+    margin-top: var(--space-7);
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-5);
+  }
+</style>

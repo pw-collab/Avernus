@@ -1,0 +1,158 @@
+/* Shared styles for the faceted browse list and the search results island. */
+
+.faceted {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.facet-panel {
+  position: sticky;
+  top: 4.5rem;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.facet-search input,
+.search-box input {
+  width: 100%;
+  font: inherit;
+  padding: var(--space-3);
+  background: var(--bg-inset);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+
+.facet-search input::placeholder,
+.search-box input::placeholder {
+  color: var(--text-faint);
+}
+
+.facet-legend {
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+  padding: 0;
+}
+
+.facet-group {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+.facet-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+.facet-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: var(--step--1);
+}
+.facet-option:hover {
+  background: var(--bg-panel);
+}
+.facet-option input {
+  accent-color: var(--accent-deep);
+  width: 1rem;
+  height: 1rem;
+}
+.facet-value {
+  color: var(--text);
+}
+.facet-count {
+  margin-left: auto;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+.facet-clear {
+  justify-self: start;
+}
+
+.facet-count-line,
+.search-count-line {
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  margin-bottom: var(--space-4);
+}
+.facet-empty {
+  padding: var(--space-5) 0;
+}
+
+.facet-cards,
+.search-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.card-kicker {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  margin-bottom: var(--space-1);
+}
+.card-title {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: var(--step-1);
+  color: var(--accent);
+  font-weight: 600;
+}
+.card:hover .card-title {
+  color: var(--accent-hover);
+}
+.card-summary {
+  display: block;
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+  font-size: var(--step--1);
+  line-height: 1.5;
+}
+.card-editions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+.card-ed {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  color: var(--accent-hover);
+  background: color-mix(in srgb, var(--accent-deep) 24%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-deep) 50%, transparent);
+}
+.search-cards mark {
+  background: color-mix(in srgb, var(--accent-deep) 45%, transparent);
+  color: var(--text);
+  border-radius: 2px;
+  padding: 0 0.1em;
+}
+
+@media (max-width: 52rem) {
+  .faceted {
+    grid-template-columns: 1fr;
+  }
+  .facet-panel {
+    position: static;
+  }
+}

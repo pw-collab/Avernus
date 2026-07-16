@@ -1,0 +1,92 @@
+---
+import type { SpoilerLevel } from '../content.config';
+
+/**
+ * Collapses spoiler content behind a click-to-reveal control. Used to wrap any
+ * region whose `spoilerLevel !== "none"`. Built on native <details> so it is
+ * keyboard-accessible and works without JavaScript (progressive enhancement).
+ */
+interface Props {
+  level: SpoilerLevel;
+  /** Optional short label describing what is hidden, e.g. "Strahd's origin". */
+  summary?: string;
+}
+const { level, summary } = Astro.props;
+
+const LABELS: Record<Exclude<SpoilerLevel, 'none'>, string> = {
+  'player-safe': 'Player-safe spoiler',
+  'dm-only': 'DM-only spoiler',
+};
+
+// `none` should never be wrapped; render children plainly if it is.
+const isSpoiler = level !== 'none';
+const label = isSpoiler ? LABELS[level] : '';
+---
+
+{
+  isSpoiler ? (
+    <details class:list={['spoiler', level]}>
+      <summary>
+        <span class="spoiler-tag">{label}</span>
+        <span class="spoiler-hint">
+          {summary ? summary : 'Click to reveal'}
+        </span>
+      </summary>
+      <div class="spoiler-body">
+        <slot />
+      </div>
+    </details>
+  ) : (
+    <slot />
+  )
+}
+
+<style>
+  .spoiler {
+    border: 1px solid var(--spoiler-deep);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--spoiler-deep) 12%, var(--bg-panel));
+    margin-bottom: var(--space-4);
+    overflow: hidden;
+  }
+  summary {
+    cursor: pointer;
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-weight: 600;
+    color: var(--spoiler);
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::before {
+    content: '\25B6';
+    font-size: 0.7em;
+    color: var(--spoiler);
+    transition: transform 0.15s ease;
+  }
+  .spoiler[open] summary::before {
+    transform: rotate(90deg);
+  }
+  .spoiler-tag {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--step--1);
+  }
+  .spoiler-hint {
+    color: var(--text-faint);
+    font-weight: 400;
+    font-size: var(--step--1);
+  }
+  .spoiler[open] .spoiler-hint {
+    display: none;
+  }
+  .spoiler-body {
+    padding: 0 var(--space-4) var(--space-2);
+    border-top: 1px solid color-mix(in srgb, var(--spoiler-deep) 40%, transparent);
+    padding-top: var(--space-3);
+  }
+</style>

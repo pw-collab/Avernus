@@ -1,0 +1,92 @@
+---
+import { getRelatedEntities } from '../lib/related';
+import { ENTITY_COLLECTIONS, type EntityCollectionKey } from '../lib/entities';
+
+/**
+ * "Related entities" / "Appears in" panel. Renders the grouped output of
+ * getRelatedEntities — the same data the Phase 5 graph view will consume.
+ */
+interface Props {
+  collection: EntityCollectionKey;
+  slug: string;
+}
+const { collection, slug } = Astro.props;
+const groups = await getRelatedEntities(collection, slug);
+---
+
+{
+  groups.length > 0 && (
+    <section class="related" aria-labelledby="related-heading">
+      <h2 id="related-heading">Connections</h2>
+      <div class="related-groups">
+        {groups.map((group) => (
+          <div class="related-group">
+            <h3>{group.label}</h3>
+            <ul>
+              {group.items.map((item) => (
+                <li>
+                  <a href={item.url} class="related-link">
+                    <span class="related-type">
+                      {ENTITY_COLLECTIONS[item.collection].singular}
+                    </span>
+                    <span class="related-name">{item.name}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .related {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+  .related-groups {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  }
+  .related-group h3 {
+    font-size: var(--step-0);
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+    margin-bottom: var(--space-2);
+  }
+  .related-group ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-1);
+  }
+  .related-link {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius);
+    text-decoration: none;
+    border: 1px solid transparent;
+  }
+  .related-link:hover {
+    background: var(--bg-panel);
+    border-color: var(--border);
+  }
+  .related-type {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+  }
+  .related-name {
+    color: var(--accent);
+    font-weight: 600;
+  }
+</style>

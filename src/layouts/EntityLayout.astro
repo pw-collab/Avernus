@@ -1,0 +1,207 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs, { type Crumb } from '../components/Breadcrumbs.astro';
+import Infobox from '../components/Infobox.astro';
+import EditionBadges from '../components/EditionBadges.astro';
+import SpoilerWrapper from '../components/SpoilerWrapper.astro';
+import RelatedEntities from '../components/RelatedEntities.astro';
+import { resolveRef, resolveRefs } from '../lib/refs';
+import {
+  ENTITY_COLLECTIONS,
+  entityName,
+  type EntityCollectionKey,
+} from '../lib/entities';
+import type { Edition, SpoilerLevel } from '../content.config';
+
+/**
+ * Shared entity page template. Every collection's `[slug].astro` route renders
+ * through here, passing its entry and rendered MDX body. Responsible for
+ * breadcrumbs, the infobox, edition badges, entity-level spoiler wrapping, the
+ * per-fact edition-conflict notes, the connections panel, JSON-LD, and the
+ * Pagefind metadata/filter markup.
+ */
+interface Props {
+  collection: EntityCollectionKey;
+  entry: { id: string; data: Record<string, unknown> };
+  jsonLd: Record<string, unknown>;
+}
+const { collection, entry, jsonLd } = Astro.props;
+const d = entry.data as Record<string, any>;
+const name = entityName({ collection, data: d, id: entry.id } as any);
+const meta = ENTITY_COLLECTIONS[collection];
+const editions = (d.editions ?? []) as Edition[];
+const spoilerLevel = (d.spoilerLevel ?? 'none') as SpoilerLevel;
+
+// Resolve the domain (for breadcrumbs + facets) and sources (for facets).
+const domainRef = await resolveRef(d.domain);
+const sourceRefs = collection === 'sources' ? [] : await resolveRefs(d.sources ?? []);
+
+// Breadcrumbs: Home › Collection › [Cluster] › [Domain] › Entity
+const crumbs: Crumb[] = [
+  { label: 'Home', href: '/' },
+  { label: meta.plural, href: meta.urlBase },
+];
+if (collection === 'domains' && typeof d.cluster === 'string' && d.cluster) {
+  crumbs.push({ label: d.cluster });
+}
+if (domainRef && collection !== 'domains') {
+  crumbs.push({ label: domainRef.name, href: domainRef.url });
+}
+crumbs.push({ label: name });
+
+const editionNotes = (d.editionNotes ?? []) as {
+  field: string;
+  editions: Edition[];
+  note: string;
+}[];
+
+const description =
+  typeof d.summary === 'string' && d.summary ? d.summary : `${name} — ${meta.singular} in the Ravenloft setting.`;
+
+const wrapBody = spoilerLevel !== 'none';
+---
+
+<BaseLayout title={name} description={description} jsonLd={jsonLd}>
+  <Breadcrumbs items={crumbs} />
+
+  <article class="entity" data-pagefind-body>
+    {/* Pagefind metadata + facet filters (attribute-valued so no body text is polluted). */}
+    <div class="visually-hidden" aria-hidden="true">
+      <span data-pagefind-meta={`type:${meta.singular}`}></span>
+      <span data-pagefind-filter={`type:${meta.singular}`}></span>
+      {domainRef && <span data-pagefind-meta={`domain:${domainRef.name}`}></span>}
+      {domainRef && <span data-pagefind-filter={`domain:${domainRef.name}`}></span>}
+      {editions.map((e) => <span data-pagefind-filter={`edition:${e}`}></span>)}
+      {sourceRefs.map((s) => <span data-pagefind-filter={`source:${s.name}`}></span>)}
+    </div>
+
+    <header class="entity-header">
+      <p class="eyebrow">{meta.singular}</p>
+      <h1 data-pagefind-meta="title">{name}</h1>
+      {d.title && <p class="entity-subtitle">{d.title}</p>}
+      {
+        editions.length > 0 && (
+          <div class="entity-editions">
+            <EditionBadges editions={editions} label="Canon in" />
+          </div>
+        )
+      }
+      {
+        typeof d.summary === 'string' && d.summary && (
+          <p class="entity-lede">{d.summary}</p>
+        )
+      }
+    </header>
+
+    <div class="entity-grid">
+      <div class="entity-body prose">
+        {
+          wrapBody ? (
+            <SpoilerWrapper level={spoilerLevel} summary={`Full ${meta.singular.toLowerCase()} entry`}>
+              <slot />
+            </SpoilerWrapper>
+          ) : (
+            <slot />
+          )
+        }
+
+        {
+          editionNotes.length > 0 && (
+            <section class="edition-notes" aria-labelledby="edition-notes-heading">
+              <h2 id="edition-notes-heading">Canon by edition</h2>
+              <ul>
+                {editionNotes.map((note) => (
+                  <li>
+                    <div class="edition-note-head">
+                      <span class="edition-note-field">{note.field}</span>
+                      <EditionBadges editions={note.editions} variant="inline" />
+                    </div>
+                    <p>{note.note}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        <RelatedEntities collection={collection} slug={entry.id} />
+      </div>
+
+      <div class="entity-aside">
+        <Infobox collection={collection} data={d} name={name} />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .entity-header {
+    margin-bottom: var(--space-5);
+  }
+  .entity-subtitle {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--text-muted);
+    font-style: italic;
+    margin: calc(-1 * var(--space-2)) 0 var(--space-3);
+  }
+  .entity-editions {
+    margin-bottom: var(--space-4);
+  }
+  .entity-lede {
+    font-size: var(--step-1);
+    color: var(--text-muted);
+    max-width: 60ch;
+    line-height: 1.5;
+  }
+  .entity-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: var(--space-6);
+    align-items: start;
+  }
+  .entity-body {
+    min-width: 0;
+  }
+  .entity-aside {
+    position: sticky;
+    top: 4.5rem;
+  }
+  .edition-notes {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+  .edition-notes ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+  .edition-note-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-1);
+  }
+  .edition-note-field {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .edition-notes p {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  /* Infobox above body on narrow screens */
+  @media (max-width: 56rem) {
+    .entity-grid {
+      grid-template-columns: 1fr;
+    }
+    .entity-aside {
+      position: static;
+      order: -1;
+    }
+  }
+</style>

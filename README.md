@@ -64,14 +64,24 @@ There is no existing Ravenloft resource that combines completeness, modern searc
 - **[`PRD.md`](./PRD.md)** — product requirements: goals, users, data model, phased roadmap, legal constraints, success metrics.
 - **[`CLAUDE_CODE_BUILD_PROMPT.md`](./CLAUDE_CODE_BUILD_PROMPT.md)** — a ready-to-paste prompt for Claude Code to scaffold the project end to end.
 
-## Getting started (once code exists)
+## Getting started
+
+Phases 1–2 (skeleton, schema, entity templates, navigation, and search) are
+implemented. The site is a static Astro build with client-side Pagefind search —
+no server or database to run.
 
 ```bash
 npm install
-npm run dev        # local dev server
-npm run build       # static build
-npm run index:search  # rebuild the Meilisearch/Typesense index from content
+npm run dev        # local dev server at http://localhost:4321
+npm run build      # static build + Pagefind search index into dist/
+npm run preview    # serve the built site (search only works against the build)
 ```
+
+Deployment target is Cloudflare Pages (build command `npm run build`, output
+`dist`). See [`docs/hosting.md`](./docs/hosting.md). Search runs on Pagefind for
+the MVP and sits behind a small abstraction (`src/lib/search/`) so it can be
+swapped for Meilisearch/Typesense later without touching page code. To
+contribute content, see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Content model at a glance
 
