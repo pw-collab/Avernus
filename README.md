@@ -1,4 +1,4 @@
-# The Ravenloft Archive *(working title)*
+# The Avernus Archives
 
 A fast, structured, community-editable knowledge base for the **Ravenloft** Dungeons & Dragons campaign setting — built to surpass Mistipedia on speed, search, design, and data quality.
 
