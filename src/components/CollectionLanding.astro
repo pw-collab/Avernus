@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import FacetedList from './FacetedList.tsx';
+import { getBrowseItems } from '../lib/browse';
+import { ENTITY_COLLECTIONS, type EntityCollectionKey } from '../lib/entities';
+
+/**
+ * Reusable entity-type landing page: heading, blurb, and the client-side
+ * faceted browse list. Each `/<collection>/index.astro` is a one-line wrapper
+ * over this component.
+ */
+interface Props {
+  collection: EntityCollectionKey;
+}
+const { collection } = Astro.props;
+const meta = ENTITY_COLLECTIONS[collection];
+const items = await getBrowseItems(collection);
+
+type FacetKey = 'edition' | 'domain' | 'subtype';
+const facets: { key: FacetKey; label: string }[] = [];
+if (collection === 'domains') facets.push({ key: 'subtype', label: 'Domain type' });
+if (collection === 'locations') facets.push({ key: 'subtype', label: 'Location type' });
+if (collection === 'sources') facets.push({ key: 'subtype', label: 'Product type' });
+if (collection === 'darklords' || collection === 'npcs' || collection === 'locations') {
+  facets.push({ key: 'domain', label: 'Domain' });
+}
+facets.push({ key: 'edition', label: 'Edition' });
+---
+
+<BaseLayout title={meta.plural} description={meta.blurb}>
+  <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: meta.plural }]} />
+  <header class="landing-header">
+    <p class="eyebrow">Browse</p>
+    <h1>{meta.plural}</h1>
+    <p class="landing-blurb">{meta.blurb}</p>
+  </header>
+
+  {
+    items.length === 0 ? (
+      <p class="muted">No entries yet. This collection is populated in a later phase.</p>
+    ) : (
+      <FacetedList client:load items={items} facets={facets} />
+    )
+  }
+</BaseLayout>
+
+<style>
+  .landing-header {
+    margin-bottom: var(--space-6);
+    max-width: 60ch;
+  }
+  .landing-blurb {
+    color: var(--text-muted);
+    font-size: var(--step-1);
+    margin: 0;
+  }
+</style>

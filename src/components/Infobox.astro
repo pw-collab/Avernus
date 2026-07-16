@@ -1,0 +1,222 @@
+---
+import EditionBadges from './EditionBadges.astro';
+import { resolveRef, resolveRefs, type ResolvedRef } from '../lib/refs';
+import { ENTITY_COLLECTIONS, type EntityCollectionKey } from '../lib/entities';
+import type { Edition } from '../content.config';
+
+/**
+ * Shared infobox, parameterized by entity type. Given a collection key and the
+ * entry data, it resolves reference fields and lays out the key typed facts as
+ * a semantic <dl> — no per-page duplication, no div soup. Add a collection to
+ * the switch below and its infobox layout exists everywhere.
+ */
+interface Props {
+  collection: EntityCollectionKey;
+  data: Record<string, unknown>;
+  name: string;
+}
+const { collection, data, name } = Astro.props;
+const d = data as Record<string, any>;
+
+type Row =
+  | { label: string; kind: 'text'; text: string }
+  | { label: string; kind: 'link'; link: ResolvedRef }
+  | { label: string; kind: 'links'; links: ResolvedRef[] }
+  | { label: string; kind: 'badge'; text: string; tone: 'accent' | 'ok' | 'warn' };
+
+const rows: Row[] = [];
+
+const pushText = (label: string, value: unknown) => {
+  if (value == null || value === '') return;
+  rows.push({ label, kind: 'text', text: String(value) });
+};
+const pushLink = async (label: string, ref: unknown) => {
+  const r = await resolveRef(ref as any);
+  if (r) rows.push({ label, kind: 'link', link: r });
+};
+const pushLinks = async (label: string, refs: unknown) => {
+  const rs = await resolveRefs((refs as any[]) ?? []);
+  if (rs.length) rows.push({ label, kind: 'links', links: rs });
+};
+
+const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+switch (collection) {
+  case 'domains':
+    pushText('Type', titleCase(d.type));
+    pushText('Cluster', d.cluster);
+    await pushLink('Darklord', d.darklord);
+    pushText('Genre / trope', d.genreTrope);
+    pushText('Cultural level', d.culturalLevel);
+    await pushLinks('Adjacent domains', d.adjacentDomains);
+    break;
+  case 'darklords':
+    pushText('Title', d.title);
+    await pushLink('Domain', d.domain);
+    pushText('Origin', d.origin);
+    pushText('Dark gift', d.darkGift);
+    await pushLink('First appearance', d.firstAppearance);
+    break;
+  case 'npcs':
+    pushText('Title', d.title);
+    pushText('Role', d.role);
+    await pushLink('Domain', d.domain);
+    await pushLink('Darklord', d.relatedDarklord);
+    if (Array.isArray(d.affiliations) && d.affiliations.length) {
+      pushText('Affiliations', d.affiliations.join(', '));
+    }
+    break;
+  case 'locations':
+    pushText('Type', titleCase(d.type));
+    await pushLink('Domain', d.domain);
+    pushText('Sinkhole of Evil', d.sinkholeOfEvilRank);
+    await pushLinks('Notable inhabitants', d.inhabitants);
+    break;
+  case 'sources':
+    pushText('Publisher', d.publisher);
+    pushText('Year', d.year);
+    pushText('Type', titleCase(d.sourceType));
+    pushText('Abbreviation', d.abbreviation);
+    pushText('ISBN', d.isbn);
+    break;
+  case 'artifacts':
+    pushText('Powers', d.powers);
+    await pushLink('Current location', d.currentLocation);
+    await pushLink('Bearer', d.ownerNpc);
+    await pushLink('Bearer', d.ownerDarklord);
+    break;
+  case 'timeline':
+    pushText('In-world date', d.inWorldDate);
+    pushText('Context', d.realWorldContext);
+    break;
+  case 'mechanics':
+    pushText('Category', d.category);
+    if (d.legalStatus) {
+      rows.push({
+        label: 'Rules text',
+        kind: 'badge',
+        text: d.legalStatus === 'srd-safe' ? 'SRD-safe' : 'WotC-proprietary',
+        tone: d.legalStatus === 'srd-safe' ? 'ok' : 'warn',
+      });
+    }
+    break;
+}
+
+const editions = (d.editions ?? []) as Edition[];
+const meta = ENTITY_COLLECTIONS[collection];
+---
+
+<aside class="infobox" aria-labelledby="infobox-title">
+  <p class="infobox-kicker">{meta.singular}</p>
+  <h2 class="infobox-title" id="infobox-title">{name}</h2>
+  <dl>
+    {
+      rows.map((row) => (
+        <div class="row">
+          <dt>{row.label}</dt>
+          <dd>
+            {row.kind === 'text' && <span>{row.text}</span>}
+            {row.kind === 'link' && <a href={row.link.url}>{row.link.name}</a>}
+            {row.kind === 'links' && (
+              <ul class="link-list">
+                {row.links.map((l) => (
+                  <li>
+                    <a href={l.url}>{l.name}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {row.kind === 'badge' && (
+              <span class:list={['status-badge', row.tone]}>{row.text}</span>
+            )}
+          </dd>
+        </div>
+      ))
+    }
+    {
+      editions.length > 0 && (
+        <div class="row">
+          <dt>Editions</dt>
+          <dd>
+            <EditionBadges editions={editions} label="" />
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+</aside>
+
+<style>
+  .infobox {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+  }
+  .infobox-kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: var(--step--1);
+    color: var(--text-faint);
+    font-weight: 600;
+    margin: 0 0 var(--space-1);
+  }
+  .infobox-title {
+    font-size: var(--step-1);
+    margin: 0 0 var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
+  }
+  dl {
+    margin: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: var(--space-3);
+    align-items: baseline;
+  }
+  dt {
+    font-size: var(--step--1);
+    color: var(--text-faint);
+    font-weight: 600;
+  }
+  dd {
+    margin: 0;
+    color: var(--text);
+  }
+  .link-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .status-badge {
+    display: inline-block;
+    font-size: var(--step--1);
+    font-weight: 600;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid;
+  }
+  .status-badge.ok {
+    color: var(--ok);
+    border-color: color-mix(in srgb, var(--ok) 50%, transparent);
+    background: color-mix(in srgb, var(--ok) 14%, transparent);
+  }
+  .status-badge.warn {
+    color: var(--spoiler);
+    border-color: var(--spoiler-deep);
+    background: color-mix(in srgb, var(--spoiler-deep) 18%, transparent);
+  }
+  @media (max-width: 34rem) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
+  }
+</style>

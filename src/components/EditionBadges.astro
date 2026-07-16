@@ -1,0 +1,65 @@
+---
+import type { Edition } from '../content.config';
+
+/**
+ * Renders edition badges for an entity, or an inline per-fact edition tag.
+ * `variant="inline"` is used next to a specific fact where canon differs across
+ * editions (see EditionNote usage in the infobox).
+ */
+interface Props {
+  editions: Edition[];
+  variant?: 'block' | 'inline';
+  label?: string;
+}
+const { editions, variant = 'block', label } = Astro.props;
+
+const EDITION_TITLES: Record<Edition, string> = {
+  I6: 'I6: Ravenloft (1983 module)',
+  '2e': 'AD&D 2nd Edition',
+  '3e': '3rd Edition / d20',
+  '4e': '4th Edition',
+  '5e': '5th Edition',
+  '2024': '2024 revision',
+};
+---
+
+<span class:list={['edition-badges', variant]} role="group" aria-label={label ?? 'Editions'}>
+  {label && <span class="ed-label">{label}</span>}
+  {
+    editions.map((ed) => (
+      <span class="ed-badge" title={EDITION_TITLES[ed]}>
+        {ed}
+      </span>
+    ))
+  }
+</span>
+
+<style>
+  .edition-badges {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    align-items: center;
+  }
+  .ed-label {
+    font-size: var(--step--1);
+    color: var(--text-faint);
+    margin-right: var(--space-1);
+  }
+  .ed-badge {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    color: var(--accent-hover);
+    background: color-mix(in srgb, var(--accent-deep) 26%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent-deep) 55%, transparent);
+    white-space: nowrap;
+  }
+  .inline .ed-badge {
+    font-size: 0.66rem;
+    padding: 0.02rem 0.3rem;
+  }
+</style>

@@ -1,0 +1,115 @@
+---
+import { BROWSABLE_COLLECTIONS } from '../lib/entities';
+
+const path = Astro.url.pathname.replace(/\/$/, '');
+function isActive(base: string) {
+  return path === base || path.startsWith(base + '/');
+}
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">&#9670;</span>
+      <span class="brand-text">The Avernus Archives</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        {
+          BROWSABLE_COLLECTIONS.map((c) => (
+            <li>
+              <a
+                href={c.urlBase}
+                aria-current={isActive(c.urlBase) ? 'page' : undefined}
+              >
+                {c.plural}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a class="search-link" href="/search" aria-label="Search the archive">
+      <span aria-hidden="true">&#9906;</span>
+      <span>Search</span>
+    </a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--bg-inset) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-height: 3.5rem;
+    flex-wrap: wrap;
+    padding-block: var(--space-2);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .brand-mark {
+    color: var(--accent);
+  }
+  .brand:hover {
+    color: var(--text);
+  }
+  .site-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .site-nav a,
+  .search-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--step--1);
+  }
+  .site-nav a:hover,
+  .search-link:hover {
+    color: var(--text);
+    background: var(--bg-panel-2);
+  }
+  .site-nav a[aria-current='page'] {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent-deep) 22%, transparent);
+  }
+  .search-link {
+    border: 1px solid var(--border-strong);
+  }
+  @media (max-width: 640px) {
+    .brand-text {
+      display: none;
+    }
+    .header-inner {
+      row-gap: var(--space-2);
+    }
+  }
+</style>
