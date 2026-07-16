@@ -42,12 +42,11 @@ npm run preview    # serve the built site (search only works here, not in dev)
 3. Fill in the frontmatter. Every collection requires `editions`, at least one
    `sources` reference, and (except `sources`) carries an optional
    `spoilerLevel`. Copy an existing entry as a template.
-4. Write the body as original prose. Use `.mdx` if you want to hide spoilers
-   inline:
+4. Write the body as original prose in an `.mdx` file. To hide spoilers inline,
+   use the `SpoilerWrapper` block — no import needed (it is provided to every
+   entity body automatically):
 
    ```mdx
-   import SpoilerWrapper from '../../components/SpoilerWrapper.astro';
-
    <SpoilerWrapper level="dm-only" summary="What the twist is">
      Original description of the spoiler…
    </SpoilerWrapper>
@@ -58,14 +57,37 @@ npm run preview    # serve the built site (search only works here, not in dev)
 6. Run `npm run build`. A green build means schemas, slugs, and citations all
    pass. Open a pull request.
 
-## Not yet built (Phase 3)
+## Editing in the browser with Keystatic (Phase 3)
+
+A Keystatic CMS is wired up for local editing. Run the dev server and open the
+admin UI — no separate command or account needed:
+
+```bash
+npm run dev
+# then open http://localhost:4321/keystatic
+```
+
+Keystatic edits the same Markdown/MDX files under `src/content/`, using forms
+generated from the schema: typed fields, dropdowns for editions and spoiler
+levels, relationship pickers for cross-references, and a rich-text body editor
+with a Spoiler block. Your edits land in the working tree; commit and open a
+pull request as usual. Running `npm run build` afterwards is still the
+authoritative check (the Zod schemas validate every entry).
+
+The admin UI runs only during `npm run dev` — the production build stays pure
+static (no server), so nothing about the Cloudflare Pages deploy changes. See
+`admin/README.md` for the config and the hosted, GitHub-backed "open authoring"
+upgrade path (browser edits that open a PR per change for non-technical
+contributors).
+
+## Not yet built
 
 The following are **deliberately stubbed** and will land in later phases:
 
-- **Browser-based CMS** (Decap CMS or Keystatic) with an editorial workflow that
-  opens a pull request per edit, so non-technical contributors never touch git
-  directly. Config will live under `admin/`. Until then, contribute by editing
-  Markdown and opening a PR.
+- **Hosted, GitHub-backed authoring.** Keystatic currently runs in local mode
+  (dev only). Deploying the admin so non-technical contributors can edit in the
+  browser and open a PR per change requires the Cloudflare adapter and a GitHub
+  App — see `admin/README.md`.
 - **Relationship graph and timeline views** (Phase 5). The data function that
   will feed the graph (`src/lib/related.ts` → `getRelatedEntities`) already
   exists, so that work is additive.
