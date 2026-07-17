@@ -10,32 +10,31 @@
  */
 
 :root {
-  /* Surfaces — near-black with a faint warm undertone, never flat #000 */
-  --bg: #0f0c0c;
-  --bg-panel: #191314;
-  --bg-panel-2: #211819;
-  --bg-inset: #0a0808;
-  --border: #3b2b29;
-  --border-strong: #59403c;
+  /* Surfaces — flat neutral dark, no gradients, noise, or shadows */
+  --bg: #121212;
+  --bg-panel: #1a1a1a;
+  --bg-panel-2: #222222;
+  --bg-inset: #0d0d0d;
+  --border: #2e2e2e;
+  --border-strong: #454545;
 
   /* Text — bone/parchment off-white, never pure white (all AA on --bg) */
-  --text: #e8e2d8;       /* ~15:1  */
+  --text: #e8e2d8;       /* ~14:1  */
   --text-muted: #bcb2a4; /* ~9:1   */
   --text-faint: #9c9285; /* ~6:1   */
 
-  /* Accent — blood red. Bright candle-red for text-level accents (links,
-   * headlines) so they stay AA; deep blood for fills and hairlines. */
-  --accent: #e05252;        /* links, ~5:1 on --bg */
-  --accent-hover: #f0796b;  /* ember glow, hover/active */
-  --accent-deep: #7a0c0c;   /* hairlines, borders, focus rings */
-  --accent-fill: #7e0e10;   /* large blood fills (primary CTA) */
-  --accent-fill-hover: #a5121b;
-  --accent-heading: #d24a44; /* display headlines, AA at large sizes */
-  --accent-contrast-text: #f1eae0; /* bone text on blood fills */
-  --ember-glow: rgba(176, 18, 28, 0.28); /* candle-flicker hover shadow */
+  /* Accent — one standardized red for every accent role: links, headlines,
+   * fills, hairlines, active states. */
+  --accent: #f11e1e;
+  --accent-hover: #f11e1e;
+  --accent-deep: #f11e1e;
+  --accent-fill: #f11e1e;
+  --accent-fill-hover: #f11e1e;
+  --accent-heading: #f11e1e;
+  --accent-contrast-text: #0d0d0d; /* dark text on red fills */
 
-  /* Semantic. Spoilers shift from crimson to waxen seal-gold so DM-only
-   * cues stay distinguishable now that red is the site accent. */
+  /* Semantic. Spoilers use waxen seal-gold so DM-only cues stay
+   * distinguishable from the red accent. */
   --spoiler: #d9b36a;
   --spoiler-deep: #6b5424;
   --ok: #8fbe9c;
@@ -63,8 +62,8 @@
   --space-6: 2rem;
   --space-7: 3rem;
 
-  --radius: 3px;
-  --radius-lg: 5px;
+  --radius: 0;
+  --radius-lg: 0;
   --content-width: 46rem;
   --wide-width: 72rem;
 
@@ -106,17 +105,6 @@ body {
   flex-direction: column;
   font-size: var(--step-0);
   background: var(--bg);
-}
-
-/* Atmosphere: a faint parchment-grain overlay across the whole page.
- * Fixed, non-interactive, and subtle enough never to compromise contrast. */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
 h1,
@@ -163,20 +151,13 @@ a:hover {
 :focus-visible {
   outline: 2px solid var(--accent-hover);
   outline-offset: 2px;
-  border-radius: 3px;
 }
 
-/* Thin blood-red hairline rule, fading at the ends like a drawn stroke. */
+/* Thin flat red hairline rule. */
 hr {
   border: none;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--accent-deep) 18%,
-    var(--accent-deep) 82%,
-    transparent
-  );
+  background: var(--accent);
   margin: var(--space-6) 0;
 }
 
@@ -188,7 +169,6 @@ pre {
 code {
   background: var(--bg-inset);
   padding: 0.1em 0.35em;
-  border-radius: 4px;
   border: 1px solid var(--border);
 }
 pre {
@@ -248,8 +228,8 @@ blockquote {
 
 /* Buttons & pill controls ------------------------------------------------- */
 
-/* Outlined rectangles, no pill shapes. Secondary is red-on-black outline;
- * primary is a solid blood fill with bone text. Hover glows like an ember. */
+/* Outlined rectangles, square corners, flat fills — no pills, no shadows.
+ * Secondary is red-on-dark outline; primary is a solid red fill. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -257,18 +237,17 @@ blockquote {
   font: inherit;
   font-weight: 600;
   padding: var(--space-2) var(--space-4);
-  border-radius: 2px;
-  border: 1px solid var(--accent-deep);
+  border-radius: 0;
+  border: 1px solid var(--accent);
   background: transparent;
   color: var(--text);
   cursor: pointer;
   text-decoration: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 .btn:hover {
-  border-color: var(--accent-fill-hover);
+  background: var(--bg-panel-2);
   color: var(--text);
-  box-shadow: 0 0 14px var(--ember-glow);
 }
 .btn-primary {
   background: var(--accent-fill);
@@ -283,31 +262,66 @@ blockquote {
 
 /* Cards ------------------------------------------------------------------- */
 
-/* Dark charcoal cards with a blood-red hairline along the top edge. */
+/* Flat dark cards, square corners, with a red hairline along the top edge. */
 .card {
   display: block;
   background: var(--bg-panel);
   border: 1px solid var(--border);
-  border-top: 1px solid var(--accent-deep);
-  border-radius: var(--radius-lg);
+  border-top: 1px solid var(--accent);
+  border-radius: 0;
   padding: var(--space-4);
   text-decoration: none;
   color: inherit;
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 a.card:hover {
-  border-color: var(--accent-fill-hover);
-  box-shadow: 0 0 16px var(--ember-glow);
-  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: var(--bg-panel-2);
 }
 
 .grid {
   display: grid;
   gap: var(--space-4);
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+
+/* 12-column page grid --------------------------------------------------------
+ * Interior pages: 2 left columns for navigation/filters (breadcrumbs, facet
+ * panels), the centered 7 columns (3–9) for reading/main content, and the
+ * right 2 columns for the infobox. Islands participate via display: contents
+ * so their internal panels can align to the same tracks. */
+.page-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--space-5);
+  row-gap: var(--space-4);
+  align-items: start;
+}
+.page-12 > .rail-left {
+  grid-column: 1 / 3;
+}
+.page-12 > .page-main {
+  grid-column: 3 / 10;
+  min-width: 0;
+}
+.page-12 > .rail-right {
+  grid-column: 10 / 12;
+}
+astro-island {
+  display: contents;
+}
+.page-12 astro-island > p {
+  grid-column: 3 / 10; /* island loading/fallback text sits in the main column */
+}
+@media (max-width: 64rem) {
+  .page-12 > .rail-left,
+  .page-12 > .page-main,
+  .page-12 > .rail-right {
+    grid-column: 1 / -1;
+  }
+  .page-12 astro-island > p {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Utility ----------------------------------------------------------------- */

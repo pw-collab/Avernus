@@ -6,7 +6,7 @@
   padding: 0;
   position: relative;
 }
-/* The vertical rail. */
+/* The vertical rail — flat red hairline. */
 .timeline::before {
   content: '';
   position: absolute;
@@ -14,11 +14,7 @@
   top: 4px;
   bottom: 4px;
   width: 2px;
-  background: linear-gradient(
-    var(--accent-deep),
-    var(--border-strong) 60%,
-    transparent
-  );
+  background: var(--accent);
 }
 
 .timeline-item {
@@ -35,10 +31,8 @@
   top: 6px;
   width: 14px;
   height: 14px;
-  border-radius: 50%;
   background: var(--accent);
   border: 3px solid var(--bg);
-  box-shadow: 0 0 0 1px var(--accent-deep);
 }
 
 .timeline-date {
@@ -68,7 +62,6 @@
   border: 1px solid var(--spoiler-deep);
   background: color-mix(in srgb, var(--spoiler-deep) 18%, transparent);
   padding: 0.05rem 0.4rem;
-  border-radius: 4px;
 }
 .timeline-summary {
   margin: 0 0 var(--space-2);
@@ -102,7 +95,6 @@
   font-size: 0.68rem;
   font-weight: 600;
   padding: 0.05rem 0.35rem;
-  border-radius: 4px;
   color: var(--accent-hover);
   background: color-mix(in srgb, var(--accent-deep) 24%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent-deep) 50%, transparent);

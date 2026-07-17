@@ -176,11 +176,12 @@ const meta = ENTITY_COLLECTIONS[collection];
     display: grid;
     gap: var(--space-3);
   }
+  /* Stacked label/value rows — the infobox lives in the narrow right rail
+   * of the 12-column page grid, so a side-by-side dl doesn't fit. */
   .row {
     display: grid;
-    grid-template-columns: 8.5rem 1fr;
-    gap: var(--space-3);
-    align-items: baseline;
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
   }
   dt {
     font-size: var(--step--1);
@@ -204,7 +205,6 @@ const meta = ENTITY_COLLECTIONS[collection];
     font-size: var(--step--1);
     font-weight: 600;
     padding: 0.1rem 0.5rem;
-    border-radius: 4px;
     border: 1px solid;
   }
   .status-badge.ok {
@@ -216,11 +216,5 @@ const meta = ENTITY_COLLECTIONS[collection];
     color: var(--spoiler);
     border-color: var(--spoiler-deep);
     background: color-mix(in srgb, var(--spoiler-deep) 18%, transparent);
-  }
-  @media (max-width: 34rem) {
-    .row {
-      grid-template-columns: 1fr;
-      gap: var(--space-1);
-    }
   }
 </style>
