@@ -218,6 +218,9 @@ const timeline = defineCollection({
       title: z.string(),
       // In-world date as written in the sources (calendars vary by domain).
       inWorldDate: z.string(),
+      // Explicit sort key for the timeline (in-world dates are free text and not
+      // reliably orderable). Lower sorts earlier.
+      order: z.number().default(0),
       realWorldContext: z.string().optional(),
       relatedDomains: z.array(reference('domains')).default([]),
       relatedNpcs: z.array(reference('npcs')).default([]),

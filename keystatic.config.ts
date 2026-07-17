@@ -306,6 +306,11 @@ export default config({
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         inWorldDate: requiredText('In-world date'),
+        order: fields.integer({
+          label: 'Sort order',
+          description: 'Lower sorts earlier on the timeline.',
+          defaultValue: 0,
+        }),
         realWorldContext: fields.text({ label: 'Real-world context' }),
         relatedDomains: fields.array(
           fields.relationship({ label: 'Domain', collection: 'domains' }),

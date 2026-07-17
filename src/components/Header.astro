@@ -34,6 +34,14 @@ function isActive(base: string) {
     <div class="header-utils">
       <a
         class="util-link"
+        href="/timeline"
+        aria-current={isActive('/timeline') ? 'page' : undefined}
+      >
+        <span aria-hidden="true">&#9201;</span>
+        <span>Timeline</span>
+      </a>
+      <a
+        class="util-link"
         href="/graph"
         aria-current={isActive('/graph') ? 'page' : undefined}
       >

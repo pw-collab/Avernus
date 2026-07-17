@@ -88,11 +88,13 @@ The following are **deliberately stubbed** and will land in later phases:
   (dev only). Deploying the admin so non-technical contributors can edit in the
   browser and open a PR per change requires the Cloudflare adapter and a GitHub
   App — see `admin/README.md`.
-- **Relationship graph and timeline views** (Phase 5). The data function that
-  will feed the graph (`src/lib/related.ts` → `getRelatedEntities`) already
-  exists, so that work is additive.
 - **Meilisearch/Typesense search backend.** Search currently runs on Pagefind
   (zero-server). The engine sits behind `src/lib/search/` so it can be swapped
   without touching page or component code.
+
+The **relationship graph** (`/graph`) and **timeline** (`/timeline`) are built
+(Phase 5): both are derived at build time from the same frontmatter references
+that power each entity's "Connections" panel (`src/lib/graph.ts`,
+`src/lib/timeline.ts`), so adding content extends them automatically.
 
 See `PRD.md` §11 for the full phased roadmap.
