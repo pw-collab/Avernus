@@ -7,10 +7,13 @@ import keystatic from '@keystatic/astro';
 
 import cloudflare from '@astrojs/cloudflare';
 
-// The public site URL. Cloudflare Pages assigns a *.pages.dev subdomain by
-// default; override with a custom domain here once one is registered (see the
-// "Site name and domain" open question in PRD.md §13).
-const SITE_URL = process.env.SITE_URL ?? 'https://avernus-archives.pages.dev';
+// The public site URL. Feeds canonical links, the sitemap, JSON-LD, and OG/
+// Twitter image URLs, so it must match the deployed origin. Currently the
+// temporary Workers domain; set the SITE_URL env var (in the Workers build
+// settings) to override this default once a permanent domain is registered —
+// no code change needed then. See the "Site name and domain" open question in
+// PRD.md §13, and also update the Sitemap line in public/robots.txt.
+const SITE_URL = process.env.SITE_URL ?? 'https://avernus.pedrowah.workers.dev';
 
 // The Keystatic CMS (Phase 3) injects server-rendered admin/API routes, which
 // only make sense during local editing. Gating the integration to the `dev`

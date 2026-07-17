@@ -33,10 +33,11 @@ If you instead wire up a Git-connected Cloudflare project, use build command
 ## Custom domain
 
 `astro.config.mjs` reads the public URL from the `SITE_URL` environment variable,
-falling back to `https://avernus-archives.pages.dev`. Set `SITE_URL` in the Pages
-project to your real domain once one is registered (this feeds canonical URLs,
-Open Graph tags, JSON-LD, and the sitemap). Also update the `Sitemap:` line in
-`public/robots.txt`.
+falling back to the current temporary Workers domain
+`https://avernus.pedrowah.workers.dev`. Once a permanent domain is registered,
+set `SITE_URL` in the Workers build settings to override the default (this feeds
+canonical URLs, Open Graph/Twitter image tags, JSON-LD, and the sitemap) and
+update the `Sitemap:` line in `public/robots.txt` to match.
 
 ## Caching
 
