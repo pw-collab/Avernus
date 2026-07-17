@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && pagefind --site dist",
-    "postbuild:index": "pagefind --site dist",
+    "build": "astro build && pagefind --site dist/client",
+    "postbuild:index": "pagefind --site dist/client",
     "preview": "npm run build && wrangler dev",
     "astro": "astro",
     "check": "astro check",

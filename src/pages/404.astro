@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { BROWSABLE_COLLECTIONS } from '../lib/entities';
+---
+
+<BaseLayout
+  title="Lost in the Mists"
+  description="This page could not be found in the Avernus Archives."
+>
+  <section class="notfound">
+    <p class="eyebrow">404 — Lost in the Mists</p>
+    <h1>The path leads nowhere</h1>
+    <p class="notfound-lede">
+      The page you were looking for has been swallowed by the fog — moved,
+      renamed, or perhaps never written at all. Even the archive has its blank
+      spaces.
+    </p>
+
+    <div class="notfound-actions">
+      <a class="btn btn-primary" href="/">Return to the entrance</a>
+      <a class="btn" href="/search">Search the archive</a>
+    </div>
+
+    <nav class="notfound-browse" aria-label="Browse the archive">
+      <p class="eyebrow">Or start browsing</p>
+      <ul>
+        {
+          BROWSABLE_COLLECTIONS.map((c) => (
+            <li>
+              <a href={c.urlBase}>{c.plural}</a>
+            </li>
+          ))
+        }
+        <li><a href="/graph">Graph</a></li>
+        <li><a href="/timeline">Timeline</a></li>
+      </ul>
+    </nav>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    max-width: 52ch;
+    padding-block: var(--space-6) var(--space-7);
+  }
+  .notfound h1 {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-4);
+  }
+  .notfound-lede {
+    font-size: var(--step-1);
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .notfound-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+  .notfound-browse {
+    margin-top: var(--space-7);
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-4);
+  }
+  .notfound-browse ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .notfound-browse a {
+    font-weight: 600;
+  }
+</style>
