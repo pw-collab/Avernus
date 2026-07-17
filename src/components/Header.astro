@@ -10,7 +10,7 @@ function isActive(base: string) {
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="/">
-      <span class="brand-mark" aria-hidden="true">&#9670;</span>
+      <span class="brand-mark" aria-hidden="true">&#10086;</span>
       <span class="brand-text">The Avernus Archives</span>
     </a>
 
@@ -37,7 +37,7 @@ function isActive(base: string) {
         href="/timeline"
         aria-current={isActive('/timeline') ? 'page' : undefined}
       >
-        <span aria-hidden="true">&#9201;</span>
+        <span aria-hidden="true">&#10710;</span>
         <span>Timeline</span>
       </a>
       <a
@@ -45,7 +45,7 @@ function isActive(base: string) {
         href="/graph"
         aria-current={isActive('/graph') ? 'page' : undefined}
       >
-        <span aria-hidden="true">&#9096;</span>
+        <span aria-hidden="true">&#9741;</span>
         <span>Graph</span>
       </a>
       <a class="util-link" href="/search" aria-label="Search the archive">
@@ -61,8 +61,7 @@ function isActive(base: string) {
     position: sticky;
     top: 0;
     z-index: 40;
-    background: color-mix(in srgb, var(--bg-inset) 92%, transparent);
-    backdrop-filter: blur(8px);
+    background: var(--bg-inset);
     border-bottom: 1px solid var(--border);
   }
   .header-inner {

@@ -62,9 +62,12 @@ const wrapBody = spoilerLevel !== 'none';
 ---
 
 <BaseLayout title={name} description={description} jsonLd={jsonLd}>
-  <Breadcrumbs items={crumbs} />
+  <div class="page-12 entity-page">
+    <div class="rail-left">
+      <Breadcrumbs items={crumbs} />
+    </div>
 
-  <article class="entity" data-pagefind-body>
+    <article class="entity" data-pagefind-body>
     {/* Pagefind metadata + facet filters (attribute-valued so no body text is polluted). */}
     <div class="visually-hidden" aria-hidden="true">
       <span data-pagefind-meta={`type:${meta.singular}`}></span>
@@ -137,11 +140,20 @@ const wrapBody = spoilerLevel !== 'none';
         <Infobox collection={collection} data={d} name={name} />
       </div>
     </div>
-  </article>
+    </article>
+  </div>
 </BaseLayout>
 
 <style>
+  /* The article and its inner grid dissolve into the 12-column page grid
+   * (display: contents), so the header/body land in the centered 7 columns
+   * (3–9) and the infobox in the right 2 columns (10–11). */
+  .entity {
+    display: contents;
+  }
   .entity-header {
+    grid-column: 3 / 10;
+    min-width: 0;
     margin-bottom: var(--space-5);
   }
   .entity-subtitle {
@@ -161,15 +173,14 @@ const wrapBody = spoilerLevel !== 'none';
     line-height: 1.5;
   }
   .entity-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 20rem;
-    gap: var(--space-6);
-    align-items: start;
+    display: contents;
   }
   .entity-body {
+    grid-column: 3 / 10;
     min-width: 0;
   }
   .entity-aside {
+    grid-column: 10 / 12;
     position: sticky;
     top: 4.5rem;
   }
@@ -208,14 +219,22 @@ const wrapBody = spoilerLevel !== 'none';
     font-weight: 600;
   }
 
-  /* Infobox above body on narrow screens */
-  @media (max-width: 56rem) {
-    .entity-grid {
-      grid-template-columns: 1fr;
+  /* Single column on narrow screens, infobox above the body */
+  @media (max-width: 64rem) {
+    .entity-header,
+    .entity-body,
+    .entity-aside {
+      grid-column: 1 / -1;
+    }
+    .entity-page > :global(.rail-left) {
+      order: -3;
+    }
+    .entity-header {
+      order: -2;
     }
     .entity-aside {
-      position: static;
       order: -1;
+      position: static;
     }
   }
 </style>

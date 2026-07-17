@@ -9,6 +9,7 @@ const year = new Date().getFullYear();
 
 <footer class="site-footer">
   <div class="container">
+    <p class="footer-flourish" aria-hidden="true">&#10086;</p>
     <p class="disclaimer" role="contentinfo">
       This site is unofficial Fan Content permitted under the Fan Content
       Policy. Not approved/endorsed by Wizards. Portions of the materials used
@@ -25,10 +26,17 @@ const year = new Date().getFullYear();
 <style>
   .site-footer {
     margin-top: var(--space-7);
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--accent-deep);
     background: var(--bg-inset);
     padding-block: var(--space-5);
     font-size: var(--step--1);
+  }
+  .footer-flourish {
+    color: var(--accent-deep);
+    text-align: center;
+    font-size: var(--step-1);
+    margin: 0 0 var(--space-3);
+    line-height: 1;
   }
   .disclaimer {
     color: var(--text-muted);

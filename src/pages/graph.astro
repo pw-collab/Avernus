@@ -33,23 +33,26 @@ const byCollection = (Object.keys(ENTITY_COLLECTIONS) as EntityCollectionKey[])
   title="Relationship graph"
   description="An interactive map of how the domains, darklords, characters, locations, and sources of the Ravenloft setting connect."
 >
-  <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Graph' }]} />
-  <header class="graph-header">
-    <p class="eyebrow">Explore the web of connections</p>
-    <h1>Relationship graph</h1>
-    <p class="muted">
-      Every reference between entities, drawn as a map. Filter by type or edition,
-      hover to trace a node's connections, and click through to any page. The
-      graph is derived at build time from the same links that power each entity's
-      "Connections" panel.
-    </p>
-  </header>
+  <div class="page-12">
+    <div class="rail-left">
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Graph' }]} />
+    </div>
+    <header class="page-main graph-header">
+      <p class="eyebrow">Explore the web of connections</p>
+      <h1>Relationship graph</h1>
+      <p class="muted">
+        Every reference between entities, drawn as a map. Filter by type or edition,
+        hover to trace a node's connections, and click through to any page. The
+        graph is derived at build time from the same links that power each entity's
+        "Connections" panel.
+      </p>
+    </header>
 
-  <Graph client:only="react" focus={focus}>
-    <p slot="fallback" class="muted">Loading graph…</p>
-  </Graph>
+    <Graph client:only="react" focus={focus}>
+      <p slot="fallback" class="muted">Loading graph…</p>
+    </Graph>
 
-  <section class="graph-textview" aria-label="Text index of connections">
+    <section class="page-main graph-textview" aria-label="Text index of connections">
     <details>
       <summary>Text view of all connections</summary>
       <p class="muted">
@@ -82,12 +85,13 @@ const byCollection = (Object.keys(ENTITY_COLLECTIONS) as EntityCollectionKey[])
         ))
       }
     </details>
-  </section>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
   .graph-header {
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
     max-width: 62ch;
   }
   .graph-textview {

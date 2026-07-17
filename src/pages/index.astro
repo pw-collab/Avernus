@@ -10,20 +10,20 @@ for (const c of BROWSABLE_COLLECTIONS) {
 }
 ---
 
-<BaseLayout title="The Avernus Archives">
+<BaseLayout title="The Avernus Archives" bodyClass="home">
   <section class="hero">
-    <p class="eyebrow">A structured archive for the Land of the Mists</p>
+    <p class="eyebrow">A chronicle of the Land of the Mists</p>
     <h1>The Avernus Archives</h1>
     <p class="hero-lede">
-      A fast, cross-referenced reference for the Ravenloft campaign setting —
-      its Domains of Dread, their cursed Darklords, and the characters and
-      places caught within the Mists. Every entry is typed, cited, and linked to
-      the others, so you can follow the web of connections instead of reading
-      flat prose.
+      A fast, cross-referenced reckoning of the Ravenloft campaign setting —
+      its Domains of Dread, the cursed Darklords who rule them, and every soul
+      and place the Mists have claimed. Each entry is typed, cited, and bound
+      to its kin, so you can follow the web of connections instead of
+      wandering flat prose.
     </p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="/search">Search the archive</a>
-      <a class="btn" href="/domains/barovia">Start with Barovia</a>
+      <a class="btn btn-primary" href="/search">Consult the archive</a>
+      <a class="btn" href="/domains/barovia">Enter Barovia</a>
     </div>
   </section>
 
@@ -45,7 +45,7 @@ for (const c of BROWSABLE_COLLECTIONS) {
   </section>
 
   <section class="home-note prose">
-    <h2>Built for accuracy over volume</h2>
+    <h2>Accuracy before abundance</h2>
     <p>
       This archive begins as a complete vertical slice — Barovia, Strahd von
       Zarovich, and the people and places bound to them — held to the quality
@@ -66,20 +66,47 @@ for (const c of BROWSABLE_COLLECTIONS) {
     max-width: 52ch;
     padding-block: var(--space-6) var(--space-7);
   }
+  /* Homepage treatment applied from the owner's UI Inspector session:
+   * ink-black display text, tightened type, maroon blocks, square corners. */
   .hero h1 {
-    font-size: var(--step-3);
+    font-size: 72px;
+    line-height: 64px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-align: left;
+    color: #000000;
     margin-bottom: var(--space-4);
   }
+  .hero .eyebrow {
+    color: #2e2e2e;
+    font-size: 10px;
+    line-height: 12px;
+    letter-spacing: 2px;
+    font-family: var(--font-serif);
+  }
   .hero-lede {
-    font-size: var(--step-1);
-    color: var(--text-muted);
-    line-height: 1.55;
+    font-size: 18px;
+    line-height: 28px;
+    text-align: left;
+    color: #303030;
   }
   .hero-actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
     margin-top: var(--space-5);
+  }
+  .hero-actions .btn {
+    border-radius: 0;
+  }
+  .hero-actions .btn-primary {
+    background: #1b0707;
+    border-color: #1b0707;
+    color: #f11e1e;
+  }
+  .hero-actions .btn:not(.btn-primary) {
+    color: #000000;
+    border-color: #1b0707;
   }
   .home-collections {
     margin-block: var(--space-6);
@@ -88,13 +115,59 @@ for (const c of BROWSABLE_COLLECTIONS) {
   .home-note h2 {
     margin-bottom: var(--space-4);
   }
+  .home-collections h2 {
+    color: #000000;
+    letter-spacing: 0;
+    font-size: 32px;
+    line-height: 40px;
+  }
   .home-card {
     display: flex;
     flex-direction: column;
+    background: #1b0707;
+    border-radius: 0;
   }
   .home-note {
     margin-top: var(--space-7);
     border-top: 1px solid var(--border);
     padding-top: var(--space-5);
+  }
+  .home-note h2,
+  .home-note p {
+    color: #000000;
+  }
+</style>
+
+<style is:global>
+  /* Homepage-only overrides for the shared header/footer, scoped via the
+   * body class set by BaseLayout (bodyClass="home"). The body carries the
+   * same red as the header band; since the header's rgba(241,30,30,0.8)
+   * composites over this identical base, the two blend seamlessly. */
+  body.home {
+    background: rgb(241, 30, 30);
+  }
+  body.home .site-header {
+    background: rgba(241, 30, 30, 0.8);
+    border-bottom: none;
+    color: #000000;
+  }
+  body.home .brand-text,
+  body.home .brand-mark,
+  body.home .site-nav a,
+  body.home .util-link {
+    color: #000000;
+  }
+  body.home .site-nav li:nth-child(5) a {
+    color: #050505;
+  }
+  body.home .site-nav a,
+  body.home .util-link {
+    border-radius: 0;
+  }
+  body.home .site-footer {
+    background: #1b0707;
+  }
+  body.home .footer-flourish {
+    color: #f11e1e;
   }
 </style>

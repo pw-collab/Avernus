@@ -11,30 +11,34 @@ const events = await getTimelineEvents();
   title="Timeline"
   description="A filterable history of the Land of the Mists — the events behind Barovia and its lord, across editions."
 >
-  <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Timeline' }]} />
-  <header class="timeline-header">
-    <p class="eyebrow">A history of the Mists</p>
-    <h1>Timeline</h1>
-    <p class="muted">
-      The events that shaped the valley and its lord, ordered from the distant
-      past to the present. Filter by domain, figure, or edition. Entries marked
-      <strong>DM spoiler</strong> keep their revealing detail behind a
-      click-to-reveal control on the event's own page.
-    </p>
-  </header>
+  <div class="page-12">
+    <div class="rail-left">
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Timeline' }]} />
+    </div>
+    <header class="page-main timeline-header">
+      <p class="eyebrow">A history of the Mists</p>
+      <h1>Timeline</h1>
+      <p class="muted">
+        The events that shaped the valley and its lord, ordered from the distant
+        past to the present. Filter by domain, figure, or edition. Entries marked
+        <strong>DM spoiler</strong> keep their revealing detail behind a
+        click-to-reveal control on the event's own page.
+      </p>
+    </header>
 
-  {
-    events.length === 0 ? (
-      <p class="muted">No events yet.</p>
-    ) : (
-      <Timeline client:load events={events} />
-    )
-  }
+    {
+      events.length === 0 ? (
+        <p class="page-main muted">No events yet.</p>
+      ) : (
+        <Timeline client:load events={events} />
+      )
+    }
+  </div>
 </BaseLayout>
 
 <style>
   .timeline-header {
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
     max-width: 62ch;
   }
 </style>
