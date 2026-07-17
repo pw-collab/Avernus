@@ -1,0 +1,109 @@
+/* Vertical timeline (Phase 5). */
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+/* The vertical rail. */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: linear-gradient(
+    var(--accent-deep),
+    var(--border-strong) 60%,
+    transparent
+  );
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: var(--space-6);
+  padding-bottom: var(--space-6);
+}
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+.timeline-marker {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--accent-deep);
+}
+
+.timeline-date {
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  margin: 0 0 var(--space-1);
+}
+.timeline-title {
+  font-size: var(--step-1);
+  margin: 0 0 var(--space-2);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.timeline-title a {
+  text-decoration: none;
+}
+.timeline-spoiler {
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--spoiler);
+  border: 1px solid var(--spoiler-deep);
+  background: color-mix(in srgb, var(--spoiler-deep) 18%, transparent);
+  padding: 0.05rem 0.4rem;
+  border-radius: 4px;
+}
+.timeline-summary {
+  margin: 0 0 var(--space-2);
+  color: var(--text-muted);
+  max-width: 60ch;
+}
+.timeline-context {
+  margin: 0 0 var(--space-2);
+  font-size: var(--step--1);
+}
+.timeline-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+.timeline-chip {
+  font-size: var(--step--1);
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  color: var(--accent);
+  text-decoration: none;
+}
+.timeline-chip:hover {
+  border-color: var(--accent-deep);
+}
+.timeline-ed {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  color: var(--accent-hover);
+  background: color-mix(in srgb, var(--accent-deep) 24%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-deep) 50%, transparent);
+}

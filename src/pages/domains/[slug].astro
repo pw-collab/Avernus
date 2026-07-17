@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import EntityLayout from '../../layouts/EntityLayout.astro';
+import SpoilerWrapper from '../../components/SpoilerWrapper.astro';
 import { buildEntityPaths, buildJsonLd } from '../../lib/entityPages';
 
 export async function getStaticPaths() {
@@ -10,8 +11,12 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const jsonLd = buildJsonLd('domains', entry, Astro.site);
+
+// SpoilerWrapper is provided to MDX here (rather than imported per-file) so
+// entity bodies stay import-free and editable in the Keystatic CMS.
+const mdxComponents = { SpoilerWrapper };
 ---
 
 <EntityLayout collection="domains" entry={entry} jsonLd={jsonLd}>
-  <Content />
+  <Content components={mdxComponents} />
 </EntityLayout>

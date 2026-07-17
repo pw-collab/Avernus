@@ -5,16 +5,16 @@ import SpoilerWrapper from '../../components/SpoilerWrapper.astro';
 import { buildEntityPaths, buildJsonLd } from '../../lib/entityPages';
 
 export async function getStaticPaths() {
-  return buildEntityPaths('locations');
+  return buildEntityPaths('timeline');
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const jsonLd = buildJsonLd('locations', entry, Astro.site);
+const jsonLd = buildJsonLd('timeline', entry, Astro.site);
 
 const mdxComponents = { SpoilerWrapper };
 ---
 
-<EntityLayout collection="locations" entry={entry} jsonLd={jsonLd}>
+<EntityLayout collection="timeline" entry={entry} jsonLd={jsonLd}>
   <Content components={mdxComponents} />
 </EntityLayout>

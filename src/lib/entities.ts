@@ -119,6 +119,22 @@ export const BROWSABLE_COLLECTIONS = Object.values(ENTITY_COLLECTIONS).filter(
   (c) => c.browsable,
 );
 
+/**
+ * Node colours for the relationship graph, one distinct hue per collection.
+ * Chosen for legibility on the dark "Mist & Slate" ground (all clear ≥3:1 as
+ * large graph marks) and to stay visually distinct from one another.
+ */
+export const GRAPH_COLORS: Record<EntityCollectionKey, string> = {
+  domains: '#bcace8', // lavender (accent)
+  darklords: '#e59a9a', // crimson
+  npcs: '#93c9a9', // green
+  locations: '#e0c27a', // amber
+  sources: '#8fb2d6', // slate blue
+  artifacts: '#d9a3cf', // pink
+  timeline: '#7fd4d0', // teal
+  mechanics: '#b7b7c9', // grey
+};
+
 /** The display name used for an entity across the UI. */
 export function entityName(entry: {
   collection: string;

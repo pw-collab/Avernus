@@ -92,7 +92,7 @@ const domains = defineCollection({
       // (Cluster → Domain → Location). Free text because clusters are a loose
       // grouping, not their own collection in this phase.
       cluster: z.string().optional(),
-      darklord: reference('darklords').optional(),
+      darklord: reference('darklords').nullish(),
       genreTrope: z.string(),
       culturalLevel: z.string().optional(),
       mistBorderDescription: z.string().optional(),
@@ -116,12 +116,12 @@ const darklords = defineCollection({
     z.object({
       name: z.string(),
       title: z.string().optional(),
-      domain: reference('domains').optional(),
+      domain: reference('domains').nullish(),
       origin: z.string().optional(),
       darkGift: z.string().optional(),
       curse: z.string().optional(),
       relatedNpcs: z.array(reference('npcs')).default([]),
-      firstAppearance: reference('sources').optional(),
+      firstAppearance: reference('sources').nullish(),
       summary: z.string(),
       editionNotes,
       sources: sourcesRef,
@@ -142,8 +142,8 @@ const npcs = defineCollection({
       name: z.string(),
       title: z.string().optional(),
       role: z.string(),
-      domain: reference('domains').optional(),
-      relatedDarklord: reference('darklords').optional(),
+      domain: reference('domains').nullish(),
+      relatedDarklord: reference('darklords').nullish(),
       // Societies/factions are not their own collection yet (Phase 4); free
       // text keeps them searchable without a dangling reference.
       affiliations: z.array(z.string()).default([]),
@@ -175,7 +175,7 @@ const locations = defineCollection({
         'building',
         'region',
       ]),
-      domain: reference('domains').optional(),
+      domain: reference('domains').nullish(),
       inhabitants: z.array(reference('npcs')).default([]),
       // "Sinkhole of Evil" rank — an in-setting measure of a place's malignity.
       sinkholeOfEvilRank: z.string().optional(),
@@ -199,9 +199,9 @@ const artifacts = defineCollection({
     z.object({
       name: z.string(),
       powers: z.string().optional(),
-      currentLocation: reference('locations').optional(),
-      ownerNpc: reference('npcs').optional(),
-      ownerDarklord: reference('darklords').optional(),
+      currentLocation: reference('locations').nullish(),
+      ownerNpc: reference('npcs').nullish(),
+      ownerDarklord: reference('darklords').nullish(),
       summary: z.string(),
       editionNotes,
       sources: sourcesRef,
@@ -218,6 +218,9 @@ const timeline = defineCollection({
       title: z.string(),
       // In-world date as written in the sources (calendars vary by domain).
       inWorldDate: z.string(),
+      // Explicit sort key for the timeline (in-world dates are free text and not
+      // reliably orderable). Lower sorts earlier.
+      order: z.number().default(0),
       realWorldContext: z.string().optional(),
       relatedDomains: z.array(reference('domains')).default([]),
       relatedNpcs: z.array(reference('npcs')).default([]),
