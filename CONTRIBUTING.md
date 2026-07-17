@@ -34,7 +34,8 @@ npm run preview    # serve the built site (search only works here, not in dev)
 ## Adding or editing an entity
 
 1. Pick the right collection directory under `src/content/`
-   (`domains`, `darklords`, `npcs`, `locations`, `sources`).
+   (`domains`, `darklords`, `npcs`, `locations`, `sources`, `artifacts`,
+   `mechanics`, `timeline`).
 2. Create a file named for the entity's **slug** — the slug is derived from the
    `name` field, and the build **fails** if the filename doesn't match it (this
    keeps URLs stable and collision-free). For example, a domain named `Barovia`

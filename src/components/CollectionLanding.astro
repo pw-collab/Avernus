@@ -22,6 +22,7 @@ const facets: { key: FacetKey; label: string }[] = [];
 if (collection === 'domains') facets.push({ key: 'subtype', label: 'Domain type' });
 if (collection === 'locations') facets.push({ key: 'subtype', label: 'Location type' });
 if (collection === 'sources') facets.push({ key: 'subtype', label: 'Product type' });
+if (collection === 'mechanics') facets.push({ key: 'subtype', label: 'Category' });
 if (collection === 'darklords' || collection === 'npcs' || collection === 'locations') {
   facets.push({ key: 'domain', label: 'Domain' });
 }
