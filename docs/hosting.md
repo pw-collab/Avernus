@@ -1,24 +1,34 @@
-# Hosting on Cloudflare Pages
+# Hosting on Cloudflare
 
-The Avernus Archives builds to a fully static site (`output: 'static'` in
-`astro.config.mjs`) plus a Pagefind search index. There is **no server runtime**
-and **no adapter** required — Cloudflare Pages serves the `dist/` directory
-directly. This is the preferred setup (see the build prompt's hosting note): pure
-static, zero infrastructure to operate.
+The Avernus Archives builds to fully prerendered pages (`output: 'static'` in
+`astro.config.mjs`) and deploys to Cloudflare via the **`@astrojs/cloudflare`
+adapter** (Cloudflare Workers static assets). All content is still prerendered —
+there is no per-request rendering of content pages — but the adapter changes the
+output layout:
 
-## Cloudflare Pages settings
+- prerendered pages and public assets are emitted to **`dist/client/`** (this is
+  the served root), and
+- a small Worker entry is emitted to `dist/server/`.
 
-Create a Pages project connected to this repository with:
+Because `dist/client/` is what gets served, the Pagefind search index must live
+there too. `npm run build` runs `astro build && pagefind --site dist/client`, so
+the index is generated into `dist/client/pagefind/` alongside the pages — served
+at `/pagefind/…` as the search island expects. (Indexing plain `dist/` instead
+would write the index to a sibling directory that never gets served, silently
+breaking search — that is exactly the trap this path avoids.)
 
-| Setting | Value |
+## Deploying
+
+Deployment uses Wrangler (added by Cloudflare's Workers autoconfig):
+
+| Command | Purpose |
 |---|---|
-| **Build command** | `npm run build` |
-| **Build output directory** | `dist` |
-| **Node version** | 20 or newer (set `NODE_VERSION=20` env var if needed) |
+| `npm run build` | Prerender + build the search index |
+| `npm run deploy` | `npm run build` then `wrangler deploy` |
+| `npm run preview` | `npm run build` then `wrangler dev` (local Workers preview) |
 
-`npm run build` runs `astro build` and then `pagefind --site dist`, so the search
-index is generated as part of every deploy — no separate index step or search
-server to run.
+If you instead wire up a Git-connected Cloudflare project, use build command
+`npm run build`. The Node version should be 20 or newer.
 
 ## Custom domain
 
