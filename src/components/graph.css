@@ -93,9 +93,7 @@
 .graph-canvas {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background:
-    radial-gradient(1000px 500px at 50% 0%, rgba(139, 0, 0, 0.1), transparent 60%),
-    var(--bg-inset);
+  background: var(--bg-inset);
   overflow: hidden;
 }
 .graph-svg {

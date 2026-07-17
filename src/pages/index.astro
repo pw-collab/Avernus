@@ -140,7 +140,12 @@ for (const c of BROWSABLE_COLLECTIONS) {
 
 <style is:global>
   /* Homepage-only overrides for the shared header/footer, scoped via the
-   * body class set by BaseLayout (bodyClass="home"). */
+   * body class set by BaseLayout (bodyClass="home"). The body carries the
+   * same red as the header band; since the header's rgba(241,30,30,0.8)
+   * composites over this identical base, the two blend seamlessly. */
+  body.home {
+    background: rgb(241, 30, 30);
+  }
   body.home .site-header {
     background: rgba(241, 30, 30, 0.8);
     border-bottom: none;
