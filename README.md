@@ -66,22 +66,31 @@ There is no existing Ravenloft resource that combines completeness, modern searc
 
 ## Getting started
 
-Phases 1–2 (skeleton, schema, entity templates, navigation, and search) are
-implemented. The site is a static Astro build with client-side Pagefind search —
-no server or database to run.
+Implemented so far: the skeleton, schema, entity templates, faceted navigation,
+and search (Phases 1–2); a local Keystatic CMS (Phase 3); and the interactive
+relationship graph (Phase 5). The site is a static Astro build with client-side
+Pagefind search — no server or database to run.
 
 ```bash
 npm install
 npm run dev        # local dev server at http://localhost:4321
+                   #   → browse /, edit content at /keystatic, explore /graph
 npm run build      # static build + Pagefind search index into dist/
 npm run preview    # serve the built site (search only works against the build)
 ```
 
 Deployment target is Cloudflare Pages (build command `npm run build`, output
-`dist`). See [`docs/hosting.md`](./docs/hosting.md). Search runs on Pagefind for
-the MVP and sits behind a small abstraction (`src/lib/search/`) so it can be
-swapped for Meilisearch/Typesense later without touching page code. To
-contribute content, see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+`dist`). See [`docs/hosting.md`](./docs/hosting.md). Highlights:
+
+- **Search** runs on Pagefind, behind a small abstraction (`src/lib/search/`) so
+  it can be swapped for Meilisearch/Typesense later without touching page code.
+- **Editing** uses [Keystatic](https://keystatic.com) in local mode (dev only);
+  the production build stays pure static. See [`admin/README.md`](./admin/README.md).
+- **The relationship graph** at `/graph` is derived at build time from the same
+  frontmatter references that power each entity's "Connections" panel; entity
+  pages themselves ship zero JavaScript.
+
+To contribute content, see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Content model at a glance
 

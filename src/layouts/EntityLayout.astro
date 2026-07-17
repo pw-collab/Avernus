@@ -125,6 +125,12 @@ const wrapBody = spoilerLevel !== 'none';
         }
 
         <RelatedEntities collection={collection} slug={entry.id} />
+
+        <p class="graph-cta">
+          <a href={`/graph?focus=${collection}:${entry.id}`}>
+            Explore {name} in the relationship graph &rarr;
+          </a>
+        </p>
       </div>
 
       <div class="entity-aside">
@@ -192,6 +198,14 @@ const wrapBody = spoilerLevel !== 'none';
   .edition-notes p {
     margin: 0;
     color: var(--text-muted);
+  }
+
+  .graph-cta {
+    margin-top: var(--space-5);
+    font-size: var(--step--1);
+  }
+  .graph-cta a {
+    font-weight: 600;
   }
 
   /* Infobox above body on narrow screens */

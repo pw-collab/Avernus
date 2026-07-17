@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Graph from '../components/Graph.tsx';
+import { buildGraph } from '../lib/graph';
+import { ENTITY_COLLECTIONS, type EntityCollectionKey } from '../lib/entities';
+
+const focus = Astro.url.searchParams.get('focus') ?? undefined;
+
+// Server-render a grouped text index of the graph as a no-JS / screen-reader
+// fallback (and for SEO). The interactive island fetches the same /graph.json.
+const graph = await buildGraph();
+const nodeById = new Map(graph.nodes.map((n) => [n.id, n]));
+const neighbours = new Map<string, { name: string; url: string; label: string }[]>();
+for (const n of graph.nodes) neighbours.set(n.id, []);
+for (const e of graph.edges) {
+  const s = nodeById.get(e.source);
+  const t = nodeById.get(e.target);
+  if (!s || !t) continue;
+  neighbours.get(e.source)!.push({ name: t.name, url: t.url, label: e.label });
+  neighbours.get(e.target)!.push({ name: s.name, url: s.url, label: e.label });
+}
+const byCollection = (Object.keys(ENTITY_COLLECTIONS) as EntityCollectionKey[])
+  .map((key) => ({
+    key,
+    meta: ENTITY_COLLECTIONS[key],
+    nodes: graph.nodes.filter((n) => n.collection === key),
+  }))
+  .filter((g) => g.nodes.length > 0);
+---
+
+<BaseLayout
+  title="Relationship graph"
+  description="An interactive map of how the domains, darklords, characters, locations, and sources of the Ravenloft setting connect."
+>
+  <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Graph' }]} />
+  <header class="graph-header">
+    <p class="eyebrow">Explore the web of connections</p>
+    <h1>Relationship graph</h1>
+    <p class="muted">
+      Every reference between entities, drawn as a map. Filter by type or edition,
+      hover to trace a node's connections, and click through to any page. The
+      graph is derived at build time from the same links that power each entity's
+      "Connections" panel.
+    </p>
+  </header>
+
+  <Graph client:only="react" focus={focus}>
+    <p slot="fallback" class="muted">Loading graph…</p>
+  </Graph>
+
+  <section class="graph-textview" aria-label="Text index of connections">
+    <details>
+      <summary>Text view of all connections</summary>
+      <p class="muted">
+        {graph.nodes.length} entities and {graph.edges.length} connections.
+      </p>
+      {
+        byCollection.map((group) => (
+          <div class="graph-textgroup">
+            <h2>{group.meta.plural}</h2>
+            <ul>
+              {group.nodes.map((n) => (
+                <li>
+                  <a href={n.url}>{n.name}</a>
+                  {neighbours.get(n.id)!.length > 0 && (
+                    <span class="graph-textconn">
+                      {' — '}
+                      {neighbours.get(n.id)!.map((c, i) => (
+                        <>
+                          {i > 0 && ', '}
+                          <a href={c.url}>{c.name}</a>
+                          <span class="muted"> ({c.label})</span>
+                        </>
+                      ))}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </details>
+  </section>
+</BaseLayout>
+
+<style>
+  .graph-header {
+    margin-bottom: var(--space-5);
+    max-width: 62ch;
+  }
+  .graph-textview {
+    margin-top: var(--space-6);
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-4);
+  }
+  .graph-textview summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--accent);
+    padding: var(--space-2) 0;
+  }
+  .graph-textgroup {
+    margin-top: var(--space-4);
+  }
+  .graph-textgroup h2 {
+    font-size: var(--step-0);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+    font-family: var(--font-sans);
+  }
+  .graph-textgroup ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .graph-textconn {
+    color: var(--text-muted);
+    font-size: var(--step--1);
+  }
+</style>
