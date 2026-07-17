@@ -1,0 +1,20 @@
+---
+import { render } from 'astro:content';
+import EntityLayout from '../../layouts/EntityLayout.astro';
+import SpoilerWrapper from '../../components/SpoilerWrapper.astro';
+import { buildEntityPaths, buildJsonLd } from '../../lib/entityPages';
+
+export async function getStaticPaths() {
+  return buildEntityPaths('artifacts');
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const jsonLd = buildJsonLd('artifacts', entry, Astro.site);
+
+const mdxComponents = { SpoilerWrapper };
+---
+
+<EntityLayout collection="artifacts" entry={entry} jsonLd={jsonLd}>
+  <Content components={mdxComponents} />
+</EntityLayout>

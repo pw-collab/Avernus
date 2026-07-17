@@ -4,6 +4,7 @@ import {
   entityName,
   entityUrl,
   ENTITY_COLLECTIONS,
+  MECHANIC_CATEGORY_LABELS,
   type EntityCollectionKey,
 } from './entities';
 
@@ -42,6 +43,7 @@ export async function getBrowseItems(
       let subtype: string | undefined;
       if (collection === 'domains' || collection === 'locations') subtype = d.type;
       if (collection === 'sources') subtype = d.sourceType;
+      if (collection === 'mechanics') subtype = MECHANIC_CATEGORY_LABELS[d.category] ?? d.category;
 
       const item: BrowseItem = {
         name: entityName({ collection, data: d, id: slug } as any),

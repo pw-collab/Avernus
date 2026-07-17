@@ -1,7 +1,11 @@
 ---
 import EditionBadges from './EditionBadges.astro';
 import { resolveRef, resolveRefs, type ResolvedRef } from '../lib/refs';
-import { ENTITY_COLLECTIONS, type EntityCollectionKey } from '../lib/entities';
+import {
+  ENTITY_COLLECTIONS,
+  MECHANIC_CATEGORY_LABELS,
+  type EntityCollectionKey,
+} from '../lib/entities';
 import type { Edition } from '../content.config';
 
 /**
@@ -90,7 +94,7 @@ switch (collection) {
     pushText('Context', d.realWorldContext);
     break;
   case 'mechanics':
-    pushText('Category', d.category);
+    pushText('Category', MECHANIC_CATEGORY_LABELS[d.category] ?? d.category);
     if (d.legalStatus) {
       rows.push({
         label: 'Rules text',

@@ -91,8 +91,8 @@ export const ENTITY_COLLECTIONS: Record<EntityCollectionKey, EntityCollectionMet
     plural: 'Artifacts',
     urlBase: '/artifacts',
     schemaType: 'CreativeWork',
-    browsable: false,
-    blurb: 'Items of power scattered through the domains. (Coming in a later phase.)',
+    browsable: true,
+    blurb: 'Items of power scattered through the domains — relics, weapons, and cursed things.',
   },
   timeline: {
     key: 'timeline',
@@ -109,8 +109,8 @@ export const ENTITY_COLLECTIONS: Record<EntityCollectionKey, EntityCollectionMet
     plural: 'Mechanics',
     urlBase: '/mechanics',
     schemaType: 'CreativeWork',
-    browsable: false,
-    blurb: 'Fear, horror, madness, powers checks, and dark gifts. (Coming in a later phase.)',
+    browsable: true,
+    blurb: 'Fear, horror, madness, powers checks, and dark gifts — each flagged SRD-safe or WotC-proprietary.',
   },
 };
 
@@ -118,6 +118,15 @@ export const ENTITY_COLLECTIONS: Record<EntityCollectionKey, EntityCollectionMet
 export const BROWSABLE_COLLECTIONS = Object.values(ENTITY_COLLECTIONS).filter(
   (c) => c.browsable,
 );
+
+/** Human labels for the mechanics `category` enum (used in infobox + facets). */
+export const MECHANIC_CATEGORY_LABELS: Record<string, string> = {
+  'fear-horror-madness': 'Fear / Horror / Madness',
+  'powers-check': 'Powers check',
+  'dark-gift': 'Dark gift',
+  curse: 'Curse',
+  other: 'Other',
+};
 
 /**
  * Node colours for the relationship graph, one distinct hue per collection.
