@@ -130,18 +130,19 @@ export const MECHANIC_CATEGORY_LABELS: Record<string, string> = {
 
 /**
  * Node colours for the relationship graph, one distinct hue per collection.
- * Chosen for legibility on the dark "Mist & Slate" ground (all clear ≥3:1 as
- * large graph marks) and to stay visually distinct from one another.
+ * A muted ink-and-ember family chosen for legibility on the dark
+ * "Candle & Bone" ground (all clear ≥3:1 as large graph marks) and to stay
+ * visually distinct from one another.
  */
 export const GRAPH_COLORS: Record<EntityCollectionKey, string> = {
-  domains: '#bcace8', // lavender (accent)
-  darklords: '#e59a9a', // crimson
-  npcs: '#93c9a9', // green
-  locations: '#e0c27a', // amber
-  sources: '#8fb2d6', // slate blue
-  artifacts: '#d9a3cf', // pink
-  timeline: '#7fd4d0', // teal
-  mechanics: '#b7b7c9', // grey
+  domains: '#b09ab5', // mist violet — the Mists that bound each domain
+  darklords: '#e05252', // blood red (accent)
+  npcs: '#8fbe9c', // grave green
+  locations: '#c9a35c', // tarnished gold
+  sources: '#c9bfa8', // parchment
+  artifacts: '#d98a66', // ember
+  timeline: '#87b3c9', // moonlight blue
+  mechanics: '#98939c', // iron grey
 };
 
 /** The display name used for an entity across the UI. */

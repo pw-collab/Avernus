@@ -50,7 +50,7 @@ const ogImage = new URL('/og.png', Astro.site ?? Astro.url).href;
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2313161d'/%3E%3Cpath d='M16 5 25 16 16 27 7 16Z' fill='none' stroke='%23bcace8' stroke-width='2'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230f0c0c'/%3E%3Cpath d='M16 5 25 16 16 27 7 16Z' fill='none' stroke='%23b0121c' stroke-width='2'/%3E%3C/svg%3E"
     />
     {jsonLd && <Fragment set:html={`<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`} />}
   </head>

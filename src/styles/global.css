@@ -1,37 +1,44 @@
 /*
- * The Avernus Archives — "Mist & Slate" design system.
+ * The Avernus Archives — "Candle & Bone" design system.
  *
- * A restrained gothic-horror theme: cool dark slate-blue ground, pale grey-blue
- * text, desaturated violet accent. This is a reference site first — every
- * foreground/background pair below is chosen to clear WCAG AA contrast (4.5:1
- * for body text, 3:1 for large text and UI borders) on the dark ground.
- * Legibility and fast scanning beat atmosphere wherever they conflict.
+ * A restrained gothic-horror theme: warm near-black ground, bone/parchment
+ * text, blood-red accent used sparingly — like candlelight, not a brand wash.
+ * This is a reference site first — every foreground/background pair below is
+ * chosen to clear WCAG AA contrast (4.5:1 for body text, 3:1 for large text)
+ * on the dark ground. Legibility and fast scanning beat atmosphere wherever
+ * they conflict.
  */
 
 :root {
-  /* Surfaces */
-  --bg: #13161d;
-  --bg-panel: #1c212c;
-  --bg-panel-2: #232a38;
-  --bg-inset: #0f1219;
-  --border: #333c4d;
-  --border-strong: #45516a;
+  /* Surfaces — near-black with a faint warm undertone, never flat #000 */
+  --bg: #0f0c0c;
+  --bg-panel: #191314;
+  --bg-panel-2: #211819;
+  --bg-inset: #0a0808;
+  --border: #3b2b29;
+  --border-strong: #59403c;
 
-  /* Text (all AA on --bg) */
-  --text: #dde3ee;       /* ~13:1  */
-  --text-muted: #a4afc4; /* ~7:1   */
-  --text-faint: #8b96ac; /* ~5:1   */
+  /* Text — bone/parchment off-white, never pure white (all AA on --bg) */
+  --text: #e8e2d8;       /* ~15:1  */
+  --text-muted: #bcb2a4; /* ~9:1   */
+  --text-faint: #9c9285; /* ~6:1   */
 
-  /* Accent — desaturated violet */
-  --accent: #bcace8;        /* links, ~8:1 on --bg */
-  --accent-hover: #d3c8f2;
-  --accent-deep: #6d5fa6;   /* borders, focus */
-  --accent-contrast-text: #12131a; /* dark text on accent fills */
+  /* Accent — blood red. Bright candle-red for text-level accents (links,
+   * headlines) so they stay AA; deep blood for fills and hairlines. */
+  --accent: #e05252;        /* links, ~5:1 on --bg */
+  --accent-hover: #f0796b;  /* ember glow, hover/active */
+  --accent-deep: #7a0c0c;   /* hairlines, borders, focus rings */
+  --accent-fill: #7e0e10;   /* large blood fills (primary CTA) */
+  --accent-fill-hover: #a5121b;
+  --accent-heading: #d24a44; /* display headlines, AA at large sizes */
+  --accent-contrast-text: #f1eae0; /* bone text on blood fills */
+  --ember-glow: rgba(176, 18, 28, 0.28); /* candle-flicker hover shadow */
 
-  /* Semantic */
-  --spoiler: #e0a3a3;       /* muted crimson, DM-only cues */
-  --spoiler-deep: #7a4b4b;
-  --ok: #93c9a9;
+  /* Semantic. Spoilers shift from crimson to waxen seal-gold so DM-only
+   * cues stay distinguishable now that red is the site accent. */
+  --spoiler: #d9b36a;
+  --spoiler-deep: #6b5424;
+  --ok: #8fbe9c;
 
   /* Typography */
   --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua',
@@ -56,8 +63,8 @@
   --space-6: 2rem;
   --space-7: 3rem;
 
-  --radius: 6px;
-  --radius-lg: 10px;
+  --radius: 3px;
+  --radius-lg: 5px;
   --content-width: 46rem;
   --wide-width: 72rem;
 
@@ -99,8 +106,21 @@ body {
   flex-direction: column;
   font-size: var(--step-0);
   background:
-    radial-gradient(1200px 600px at 50% -10%, rgba(109, 95, 166, 0.14), transparent 60%),
+    radial-gradient(1200px 600px at 50% -10%, rgba(139, 0, 0, 0.12), transparent 60%),
     var(--bg);
+}
+
+/* Atmosphere: parchment grain + edge vignette laid over the whole page.
+ * Fixed, non-interactive, and faint enough never to compromise contrast. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse at center, transparent 55%, rgba(5, 3, 3, 0.4) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
 h1,
@@ -115,8 +135,11 @@ h4 {
   letter-spacing: 0.01em;
 }
 
+/* Display headlines carry the blood accent — red as candlelight, sized
+ * large enough (--step-3) that --accent-heading clears AA for large text. */
 h1 {
   font-size: var(--step-3);
+  color: var(--accent-heading);
 }
 h2 {
   font-size: var(--step-2);
@@ -147,9 +170,17 @@ a:hover {
   border-radius: 3px;
 }
 
+/* Thin blood-red hairline rule, fading at the ends like a drawn stroke. */
 hr {
   border: none;
-  border-top: 1px solid var(--border);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent-deep) 18%,
+    var(--accent-deep) 82%,
+    transparent
+  );
   margin: var(--space-6) 0;
 }
 
@@ -206,8 +237,8 @@ blockquote {
   position: absolute;
   left: var(--space-3);
   top: -3rem;
-  z-index: 100;
-  background: var(--accent);
+  z-index: 1000;
+  background: var(--accent-fill);
   color: var(--accent-contrast-text);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius);
@@ -221,6 +252,8 @@ blockquote {
 
 /* Buttons & pill controls ------------------------------------------------- */
 
+/* Outlined rectangles, no pill shapes. Secondary is red-on-black outline;
+ * primary is a solid blood fill with bone text. Hover glows like an ember. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -228,43 +261,50 @@ blockquote {
   font: inherit;
   font-weight: 600;
   padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius);
-  border: 1px solid var(--border-strong);
-  background: var(--bg-panel-2);
+  border-radius: 2px;
+  border: 1px solid var(--accent-deep);
+  background: transparent;
   color: var(--text);
   cursor: pointer;
   text-decoration: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 .btn:hover {
-  border-color: var(--accent-deep);
+  border-color: var(--accent-fill-hover);
   color: var(--text);
+  box-shadow: 0 0 14px var(--ember-glow);
 }
 .btn-primary {
-  background: var(--accent);
+  background: var(--accent-fill);
   color: var(--accent-contrast-text);
-  border-color: var(--accent);
+  border-color: var(--accent-fill);
 }
 .btn-primary:hover {
-  background: var(--accent-hover);
+  background: var(--accent-fill-hover);
+  border-color: var(--accent-fill-hover);
   color: var(--accent-contrast-text);
 }
 
 /* Cards ------------------------------------------------------------------- */
 
+/* Dark charcoal cards with a blood-red hairline along the top edge. */
 .card {
   display: block;
   background: var(--bg-panel);
   border: 1px solid var(--border);
+  border-top: 1px solid var(--accent-deep);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   text-decoration: none;
   color: inherit;
   transition:
     border-color 0.15s ease,
+    box-shadow 0.15s ease,
     transform 0.15s ease;
 }
 a.card:hover {
-  border-color: var(--accent-deep);
+  border-color: var(--accent-fill-hover);
+  box-shadow: 0 0 16px var(--ember-glow);
   transform: translateY(-2px);
 }
 
