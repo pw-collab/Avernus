@@ -8,12 +8,15 @@ interface Props {
   description?: string;
   /** Optional schema.org object rendered as JSON-LD in <head>. */
   jsonLd?: Record<string, unknown>;
+  /** Optional class on <body>, used to scope page-specific restyles. */
+  bodyClass?: string;
 }
 
 const {
   title,
   description = 'A fast, structured, cross-referenced reference archive for the Ravenloft campaign setting.',
   jsonLd,
+  bodyClass,
 } = Astro.props;
 
 const siteName = 'The Avernus Archives';
@@ -54,7 +57,7 @@ const ogImage = new URL('/og.png', Astro.site ?? Astro.url).href;
     />
     {jsonLd && <Fragment set:html={`<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`} />}
   </head>
-  <body>
+  <body class={bodyClass}>
     <a class="skip-link" href="#main">Skip to content</a>
     <Header />
     <main id="main" class="container site-main">
